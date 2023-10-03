@@ -1,4 +1,4 @@
-package main
+package deck
 
 import (
 	"fmt"
@@ -9,16 +9,16 @@ import (
 	"time"
 )
 
-// Create A Deck
+// Create a new type of 'deck'
 type deck []string
 
 func newDeck() deck {
 	cards := deck{}
-	cardSuits := []string{"Spades", "Diamonds", "Hearts", "Clubs"}
-	cardValues := []string{"Ace", "Two", "Three", "Four"}
+	suits := []string{"Spades", "Diamonds", "Hearts", "Clubs"}
+	values := []string{"Ace", "Two", "Three", "Four"}
 
-	for _, suit := range cardSuits {
-		for _, value := range cardValues {
+	for _, suit := range suits {
+		for _, value := range values {
 			cards = append(cards, value+" of "+suit)
 		}
 	}

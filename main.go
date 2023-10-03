@@ -1,27 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"os"
+	"os/signal"
+
+	"github.com/dzewelday/go-playground/application"
+)
 
 func main() {
+	app := application.New()
 
-	person := createPerson()
-	person.print()
-}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
 
-type Person struct {
-	firstName  string
-	middleName string
-	lastName   string
-}
-
-func createPerson() Person {
-	return Person{
-		firstName:  "Dawit",
-		middleName: "G",
-		lastName:   "Zewelday",
+	err := app.Start(ctx)
+	if err != nil {
+		fmt.Println("failed to start app:", err)
 	}
-}
-
-func (p Person) print() {
-	fmt.Printf("Hey %s %s %s", p.firstName, p.middleName, p.lastName)
 }

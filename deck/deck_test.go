@@ -1,11 +1,9 @@
-package main
+package deck
 
 import (
 	"os"
 	"testing"
 )
-
-// newDeck
 
 func TestNewDeck(t *testing.T) {
 	d := newDeck()
@@ -31,7 +29,6 @@ func TestSaveToDeckAndNewDeckFromFile(t *testing.T) {
 	}
 
 	loadedDeck := newDeckFromFile(file)
-
 	if len(loadedDeck) != 16 {
 		t.Errorf("Expected: 16, Actual: %v", len(loadedDeck))
 	}
