@@ -1,4 +1,4 @@
-package deck
+package main
 
 import (
 	"fmt"
@@ -31,6 +31,7 @@ func newDeckFromFile(name string) deck {
 	if err != nil {
 		log.Fatal("Error:", err)
 	}
+
 	s := strings.Split(string(bytes), ",")
 	return deck(s)
 }

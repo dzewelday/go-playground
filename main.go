@@ -1,22 +1,47 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"os"
-	"os/signal"
+import "fmt"
 
-	"github.com/dzewelday/go-playground/application"
-)
+type bot interface {
+	getGreeting() string
+}
+
+type englishBot struct{}
+type spanishBot struct{}
 
 func main() {
-	app := application.New()
+	eb := englishBot{}
+	sb := spanishBot{}
 
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer cancel()
+	printGreeting(eb)
+	printGreeting(sb)
 
-	err := app.Start(ctx)
-	if err != nil {
-		fmt.Println("failed to start app:", err)
-	}
 }
+
+func (englishBot) getGreeting() string {
+	return "Hi, There!"
+}
+
+func (spanishBot) getGreeting() string {
+	return "Hola"
+}
+
+func printGreeting(b bot) {
+	fmt.Println(b.getGreeting())
+}
+
+// Interfaces
+// Interfaces are 'implicit'
+// Interfaces are a contract to help us manage types
+
+// Maps
+// All keys must be the same type
+// All values must be the same type
+// Keys are indexed - we can iterate over them
+// Represents a collection of related properties
+
+// Structs
+// Values can be of different type
+// Keys don't support indexing
+// You need to know all the different fields at compile time
+// Represents a "thing" with a lot of different properties

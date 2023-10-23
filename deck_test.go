@@ -1,4 +1,4 @@
-package deck
+package main
 
 import (
 	"os"
@@ -13,6 +13,7 @@ func TestNewDeck(t *testing.T) {
 	if d[0] != "Ace of Spades" {
 		t.Errorf("Expected: Ace of Spades, Actual: %v", d[0])
 	}
+
 	if d[len(d)-1] != "Four of Clubs" {
 		t.Errorf("Expected: Four of Clubs, Actual: %v", d[len(d)-1])
 	}
