@@ -8,43 +8,47 @@ import (
 )
 
 type Post struct {
-	Id       int    `json:"id"`
-	Slug     string `json:"slug"`
-	Url      string `json:"url"`
-	Title    string `json:"title"`
-	Content  string `json:"content"`
-	Image    string `json:"image"`
-	Status   int    `json:"status"`
-	Category string `json:"category"`
-	UserId   int    `json:"user_id"`
-
-	PublishedAt int `json:"published_at"`
-	CreatedAt   int `json:"created_at"`
+	Id          int    `json:"id"`
+	Slug        string `json:"slug"`
+	Url         string `json:"url"`
+	Title       string `json:"title"`
+	Image       string `json:"image"`
+	Status      string `json:"status"`
+	Category    string `json:"category"`
+	PublishedAt string `json:"publishedAt"`
+	UpdatedAt   string `json:"updatedAt"`
+	UserId      int    `json:"userId"`
 }
 
 const url string = "https://jsonplaceholder.org/posts"
 
 func GetPosts() ([]Post, error) {
 
-	res, err := http.Get(url)
+	// Make the request to the API
+	resp, err := http.Get(url)
 	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != 200 {
-		return nil, errors.New("api call for posts was not successful")
+		return nil, errors.New("failed to get posts: " + err.Error())
 	}
 
-	body, err := io.ReadAll(res.Body)
+	// Close the response body when we're done
+	defer resp.Body.Close()
+
+	// Check if the status code is 200
+	if resp.StatusCode != 200 {
+		return nil, errors.New("api call for posts failed with status code: " + string(rune(resp.StatusCode)))
+	}
+
+	// Read the body of the response
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errors.New("failed to read body of posts response")
+		return nil, errors.New("failed to read body of posts response: " + err.Error())
 	}
 
+	// Convert the body into a slice of Post structs
 	var posts []Post
 	err = json.Unmarshal(body, &posts)
 	if err != nil {
-		return nil, errors.New("failed to convert posts into struct")
+		return nil, errors.New("failed to convert posts into struct: " + err.Error())
 	}
 
 	return posts, nil

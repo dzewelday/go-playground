@@ -1,47 +1,34 @@
 package main
 
-import "fmt"
-
-type bot interface {
-	getGreeting() string
-}
-
-type englishBot struct{}
-type spanishBot struct{}
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+)
 
 func main() {
-	eb := englishBot{}
-	sb := spanishBot{}
+	defer timer("GetPosts")()
+	posts, err := GetPosts()
+	if err != nil {
+		panic(err)
+	}
 
-	printGreeting(eb)
-	printGreeting(sb)
-
+	prettyStruct(posts[0])
 }
 
-func (englishBot) getGreeting() string {
-	return "Hi, There!"
+// timer returns a function that prints the name argument and
+// the elapsed time between the call to timer and the call to
+// the returned function. The returned function is intended to
+// be used in a defer statement:
+func timer(name string) func() {
+	start := time.Now()
+	return func() {
+		fmt.Printf("%s took %v\n", name, time.Since(start))
+	}
 }
 
-func (spanishBot) getGreeting() string {
-	return "Hola"
+// Pretty print a struct
+func prettyStruct(intef interface{}) {
+	output, _ := json.MarshalIndent(intef, "", "\t")
+	fmt.Printf("%s \n", output)
 }
-
-func printGreeting(b bot) {
-	fmt.Println(b.getGreeting())
-}
-
-// Interfaces
-// Interfaces are 'implicit'
-// Interfaces are a contract to help us manage types
-
-// Maps
-// All keys must be the same type
-// All values must be the same type
-// Keys are indexed - we can iterate over them
-// Represents a collection of related properties
-
-// Structs
-// Values can be of different type
-// Keys don't support indexing
-// You need to know all the different fields at compile time
-// Represents a "thing" with a lot of different properties
