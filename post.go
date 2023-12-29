@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Post struct {
@@ -20,35 +21,38 @@ type Post struct {
 	UserId      int    `json:"userId"`
 }
 
-const url string = "https://jsonplaceholder.org/posts"
+const URL = "https://jsonplaceholder.org/posts"
 
+var httpClient = &http.Client{Timeout: 10 * time.Second}
+
+// GetPosts returns a slice of Post structs
 func GetPosts() ([]Post, error) {
 
 	// Make the request to the API
-	resp, err := http.Get(url)
+	resp, err := httpClient.Get(URL)
 	if err != nil {
-		return nil, errors.New("failed to get posts: " + err.Error())
+		return nil, fmt.Errorf("failed to get posts: %w", err)
 	}
 
-	// Close the response body when we're done
+	// Close the response body when the function returns
 	defer resp.Body.Close()
 
 	// Check if the status code is 200
 	if resp.StatusCode != 200 {
-		return nil, errors.New("api call for posts failed with status code: " + string(rune(resp.StatusCode)))
+		return nil, fmt.Errorf("failed to get posts: status code %d", resp.StatusCode)
 	}
 
 	// Read the body of the response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errors.New("failed to read body of posts response: " + err.Error())
+		return nil, fmt.Errorf("failed to read body of posts response: %w", err)
 	}
 
 	// Convert the body into a slice of Post structs
 	var posts []Post
 	err = json.Unmarshal(body, &posts)
 	if err != nil {
-		return nil, errors.New("failed to convert posts into struct: " + err.Error())
+		return nil, fmt.Errorf("failed to convert posts into struct: %w", err)
 	}
 
 	return posts, nil

@@ -3,32 +3,33 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
 func main() {
-	defer timer("GetPosts")()
+	start := time.Now()
+
 	posts, err := GetPosts()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	prettyStruct(posts[0])
-}
-
-// timer returns a function that prints the name argument and
-// the elapsed time between the call to timer and the call to
-// the returned function. The returned function is intended to
-// be used in a defer statement:
-func timer(name string) func() {
-	start := time.Now()
-	return func() {
-		fmt.Printf("%s took %v\n", name, time.Since(start))
+	err = prettyPrintStruct(posts[0])
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	log.Printf("GetPosts took %s", time.Since(start))
 }
 
-// Pretty print a struct
-func prettyStruct(intef interface{}) {
-	output, _ := json.MarshalIndent(intef, "", "\t")
+// prettyPrintStruct prints a struct in a pretty format
+func prettyPrintStruct(strct any) error {
+	output, err := json.MarshalIndent(strct, "", "\t")
+	if err != nil {
+		return fmt.Errorf("failed to marshal struct: %w", err)
+	}
+
 	fmt.Printf("%s \n", output)
+	return nil
 }

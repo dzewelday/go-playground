@@ -9,9 +9,16 @@ import (
 func TestGetComment(t *testing.T) {
 	// Create a mock server
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+
 		// Send response to be tested
-		rw.Write([]byte(`{"id": 1, "post_id": 1, "user_id": "1", "comment": "Test comment"}`))
+		rw.Write([]byte(`{
+			"id": 1, 
+			"post_id": 1, 
+			"user_id": "1", 
+			"comment": "Test comment"
+			}`))
 	}))
+
 	// Close the server when test finishes
 	defer server.Close()
 
